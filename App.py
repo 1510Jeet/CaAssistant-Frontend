@@ -3,7 +3,6 @@ import requests
 from gtts import gTTS
 from io import BytesIO
 from streamlit_mic_recorder import speech_to_text
-import json
 from streamlit.runtime.scriptrunner import get_script_run_ctx
 session_id = get_script_run_ctx().session_id
 import speech_recognition as sr
@@ -14,8 +13,6 @@ r = sr.Recognizer()
 
 
 if "chat_uids" not in st.session_state:
-
-
     #chat_uids is a list of active chat_ids
     st.session_state.chat_uids = []
 
