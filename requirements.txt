@@ -1,6 +1,6 @@
 streamlit==1.36.0
 requests
 gTTS
-io
-streamlit_mic_recorder
-speech_recognition
+streamlit-mic-recorder
+SpeechRecognition
+asyncio
