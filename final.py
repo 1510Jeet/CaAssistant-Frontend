@@ -6,18 +6,20 @@ from streamlit_mic_recorder import speech_to_text
 from streamlit.runtime.scriptrunner import get_script_run_ctx
 import speech_recognition as sr
 import asyncio
-backendURL="https://a683-103-191-91-82.ngrok-free.app"
+import requests
+backendURL="https://a150-103-191-91-82.ngrok-free.app"
 session_id = get_script_run_ctx().session_id
+
 async def delete_chat(id):
     # to delete a chat from backend
-    # delete_chat_url = "http://127.0.0.1:8000/deleteChat/"
     delete_chat_url=backendURL+"/deleteChat/"
     data = {
         "session_id": session_id+str(id)
     }
     try:
         response = requests.post(delete_chat_url, json=data)
-        if response.status_code == 200:
+        data = response.json ()
+        if (response.status_code == 200 and data == "success"):
             st.success("New chat ")
                 # to delete the chats in the front-end ie streamlit 
             if id in st.session_state.messages:
@@ -31,9 +33,8 @@ async def delete_chat(id):
             st.rerun()
 
         else:
-            st.error("Error Deleting chat")
+            st.error("Server Error, Please refresh")
     except Exception as e:
-
         st.error("Error connecting server, Pls. try again.")
         return None
 
@@ -66,7 +67,6 @@ def display_chat():
 # Calling the caBuddy endpoint of API to get LLM response by session_id + current chat
 # using session_id + current chat id to keep each chat unique
 async def llm_call(prompt):
-    # url = "http://127.0.0.1:8000/caBuddy/"
     url=backendURL+"/caBuddy/"
     request_params = {
         "message": prompt,
@@ -146,7 +146,7 @@ async def main():
     # voice input column
     with mic_col:
         # to take speech input and transcribe it using speech recognition library
-        text = speech_to_text(language='en', just_once=True, key='STT',start_prompt="🎙️", stop_prompt="🎙️")
+        text = speech_to_text(language='en', just_once=True, key='STT',start_prompt="🎙️", stop_prompt="🔴")
         transcribed_text=text
 
     #text input column
